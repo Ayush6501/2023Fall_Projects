@@ -1,5 +1,4 @@
-from typing import Tuple, Any
-
+from typing import Any
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -22,7 +21,14 @@ def generate_optimized_quantity(q1max, a, c) -> tuple[int | bool | Any, int | An
     return q1, q2
 
 
-def mc_sim(num_iterations, demand_curve_coefficient, c1, c2, q2, method, q1max=101) -> pd.DataFrame:
+def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
+    q1 = (a + c2 - (2*c1))//3
+    q2 = (a + c1 - (2*c2))//3
+    return q1, q2
+
+
+def mc_sim(num_iterations, demand_curve_coefficient, c1, c2, method, q1max=101, q2=0) -> pd.DataFrame:
+    newc1, newc2 = 0, 0
     results = {
         'Firm 1 Quantity': [],
         'Firm 2 Quantity': [],
@@ -35,13 +41,21 @@ def mc_sim(num_iterations, demand_curve_coefficient, c1, c2, q2, method, q1max=1
             firm1_quantity, firm2_quantity = generate_random_quantity(q1max, q2)
         elif method == 'optimize':
             firm1_quantity, firm2_quantity = generate_optimized_quantity(q1max, demand_curve_coefficient, c2)
+        elif method == 'nash':
+            newc2 = np.random.randint(10, c2)
+            newc1 = np.random.randint(10, c1)
+            firm1_quantity, firm2_quantity = generate_nash_quantity(demand_curve_coefficient, newc1, newc2)
         else:
             firm1_quantity, firm2_quantity = generate_random_quantity(q1max, q2)
 
         market_demand = demand_curve_coefficient - (firm1_quantity + firm2_quantity)
 
-        firm1_profit = (market_demand - firm1_quantity) * firm1_quantity - c1 * firm1_quantity
-        firm2_profit = (market_demand - firm2_quantity) * firm2_quantity - c2 * firm2_quantity
+        if method == 'nash':
+            firm1_profit = (market_demand - firm1_quantity) * firm1_quantity - newc1 * firm1_quantity
+            firm2_profit = (market_demand - firm2_quantity) * firm2_quantity - newc2 * firm2_quantity
+        else:
+            firm1_profit = (market_demand - firm1_quantity) * firm1_quantity - c1 * firm1_quantity
+            firm2_profit = (market_demand - firm2_quantity) * firm2_quantity - c2 * firm2_quantity
 
         results['Firm 1 Quantity'].append(firm1_quantity)
         results['Firm 2 Quantity'].append(firm2_quantity)
