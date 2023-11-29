@@ -5,29 +5,75 @@ import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 
 
-def generate_random_number(n) -> int:
+def generate_random_number(n: int) -> int:
+    """
+    Function to generate a random integer between 0 and 'n'.
+    :param n: max integer value of random number
+    :return: random integer between 0 and n
+    """
     return np.random.randint(0, n)
 
 
-def generate_random_quantity(q1max, q2) -> tuple[int | bool | Any, int | Any]:
+def generate_random_quantity(q1max: int, q2: int) -> tuple[int | bool | Any, int | Any]:
+    """
+    Function generate random quantity of production for simulation
+    :param q1max: Maximum quantity of production
+    :param q2: Parameter to tweak quantity of production for Firm 2
+    :return: Firm 1 and Firm 2 quantities
+    """
     q1 = np.random.randint(0, q1max)  # Randomly initialize quantities
     q2 = np.random.randint(0, q1max - q2)
     return q1, q2
 
 
-def generate_optimized_quantity(q1max, a, c) -> tuple[int | bool | Any, int | Any]:
+def generate_optimized_quantity(q1max: int, a: int, c: int | float) -> tuple[int | bool | Any, int | Any]:
+    """
+    Function to return a random quantity of production for Firm 1 and an optimized quantity for Firm 2 which
+    depends on Firm 1 production.
+    :param q1max: Maximum quantity of production
+    :param a: The demand curve coefficient
+    :param c: Firm 2 cost of production
+    :return: Firm 1 and Firm 2 quantities
+    """
     q1 = np.random.randint(0, q1max)  # Randomly initialize quantities
     q2 = (a - q1 - c) // 2
     return q1, q2
 
 
 def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
-    q1 = (a + c2 - (2*c1))//3
-    q2 = (a + c1 - (2*c2))//3
+    """
+    Function to return Firm 1 and Firm 2 quantity of Production under the Nash Equilibrium optimization
+    which ensure both the firms profit under any given circumstance.
+    :param a: The demand curve coefficient
+    :param c1: Firm 1 cost of production
+    :param c2: Firm 2 cost of production
+    :return: Firm 1 and Firm 2 quantities
+    """
+    q1 = (a + c2 - (2 * c1)) // 3
+    q2 = (a + c1 - (2 * c2)) // 3
     return q1, q2
 
 
-def mc_sim(num_iterations, demand_curve_coefficient, c1, c2, method, q1max=101, q2=0) -> pd.DataFrame:
+def mc_sim(
+        num_iterations: int,
+        demand_curve_coefficient: int,
+        c1: int | float,
+        c2: int | float,
+        method: str,
+        q1max: int = 101,
+        q2: int = 0,
+) -> pd.DataFrame:
+    """
+
+    :param num_iterations:
+    :param demand_curve_coefficient:
+    :param c1:
+    :param c2:
+    :param method:
+    :param q1max:
+    :param q2:
+    :return:
+    """
     newc1, newc2 = 0, 0
     results = {
         'Firm 1 Quantity': [],
@@ -66,6 +112,11 @@ def mc_sim(num_iterations, demand_curve_coefficient, c1, c2, method, q1max=101, 
 
 
 def get_profit(data: pd.DataFrame) -> dict:
+    """
+
+    :param data:
+    :return:
+    """
     firm1_net_profit = data[(data['Firm 1 Profit'] > 0)]
     firm2_net_profit = data[(data['Firm 2 Profit'] > 0)]
     both_firm_total_profit = data[(data['Firm 1 Profit'] > 0) & (data['Firm 2 Profit'] > 0)]
@@ -81,6 +132,11 @@ def get_profit(data: pd.DataFrame) -> dict:
 
 
 def visualizer(df: pd.DataFrame) -> None:
+    """
+
+    :param df:
+    :return:
+    """
     figure, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 14))
 
     ax1.scatter(df['Firm 1 Quantity'], df['Firm 2 Quantity'])
@@ -101,6 +157,11 @@ def visualizer(df: pd.DataFrame) -> None:
 
 
 def get_statistics(data: pd.DataFrame) -> None:
+    """
+
+    :param data:
+    :return:
+    """
     firm1p_mean = data['Firm 1 Profit'].mean()
     firm2p_mean = data['Firm 2 Profit'].mean()
     print(f'Mean Profit for Firm 1: {firm1p_mean}')
