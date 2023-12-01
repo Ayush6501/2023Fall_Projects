@@ -4,14 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 
+# TODO: Unit tests
 
-def generate_random_number(n: int) -> int:
+
+def generate_random_number(n: int, m: int = 0) -> int:
     """
     Function to generate a random integer between 0 and 'n'.
+    :param m: max integer value of random number
     :param n: max integer value of random number
     :return: random integer between 0 and n
     """
-    return np.random.randint(0, n)
+    return np.random.randint(m, n)
 
 
 def generate_random_quantity(q1max: int, q2: int) -> tuple[int | bool | Any, int | Any]:
@@ -54,7 +57,7 @@ def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
     return q1, q2
 
 
-def mc_sim(
+def cournot_model(
         num_iterations: int,
         demand_curve_coefficient: int,
         c1: int | float,
@@ -137,7 +140,7 @@ def visualizer(df: pd.DataFrame) -> None:
     :param df:
     :return:
     """
-    figure, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(10, 14))
+    figure, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(15, 20))
 
     ax1.scatter(df['Firm 1 Quantity'], df['Firm 2 Quantity'])
     ax1.set_title('Firm 1 Quantity vs Firm 2 Quantity')
