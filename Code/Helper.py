@@ -17,19 +17,19 @@ def generate_random_number(n: int, m: int = 0) -> int:
     return np.random.randint(m, n)
 
 
-def generate_random_quantity(q1max: int, q2: int) -> tuple[int | bool | Any, int | Any]:
+def generate_random_quantity(q1: int, q2: int) -> tuple[int | bool | Any, int | Any]:
     """
     Function generate random quantity of production for simulation
     :param q1max: Maximum quantity of production
     :param q2: Parameter to tweak quantity of production for Firm 2
     :return: Firm 1 and Firm 2 quantities
     """
-    q1 = np.random.randint(0, q1max)  # Randomly initialize quantities
-    q2 = np.random.randint(0, q1max - q2)
+    q1 = np.random.randint(0, q1)  # Randomly initialize quantities
+    q2 = np.random.randint(0, q2)
     return q1, q2
 
 
-def generate_optimized_quantity(q1max: int, a: int, c: int | float) -> tuple[int | bool | Any, int | Any]:
+def generate_optimized_quantity(q1: int, a: int, c: int | float) -> tuple[int | bool | Any, int | Any]:
     """
     Function to return a random quantity of production for Firm 1 and an optimized quantity for Firm 2 which
     depends on Firm 1 production.
@@ -38,7 +38,7 @@ def generate_optimized_quantity(q1max: int, a: int, c: int | float) -> tuple[int
     :param c: Firm 2 cost of production
     :return: Firm 1 and Firm 2 quantities
     """
-    q1 = np.random.randint(0, q1max)  # Randomly initialize quantities
+    q1 = np.random.randint(0, q1)  # Randomly initialize quantities
     q2 = (a - q1 - c) // 2
     return q1, q2
 
@@ -57,27 +57,38 @@ def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
     return q1, q2
 
 
+def plot_profits(df: pd.DataFrame):
+    plt.figure(figsize=(20, 15))
+    plt.hist([df['Firm 1 Profit'], df['Firm 2 Profit']], stacked=True, color=['orange', 'blue'])
+    plt.xlabel('Profit', fontsize=20)
+    plt.ylabel('No. of occurrences', fontsize=20)
+    plt.legend(['Firm 1 Profit', 'Firm 2 Profit'], fontsize=20)
+    plt.show()
+    return None
+
+
 def cournot_model(
         num_iterations: int,
-        demand_curve_coefficient: int,
+        demand_curve_coefficient_mu: int,
+        demand_curve_coefficient_sigma: int,
         c1: int | float,
         c2: int | float,
         method: str,
-        q1max: int = 101,
+        q1: int = 101,
         q2: int = 0,
 ) -> pd.DataFrame:
     """
 
     :param num_iterations:
-    :param demand_curve_coefficient:
+    :param demand_curve_coefficient_mu:
+    :param demand_curve_coefficient_sigma:
     :param c1:
     :param c2:
     :param method:
-    :param q1max:
+    :param q1:
     :param q2:
     :return:
     """
-    newc1, newc2 = 0, 0
     results = {
         'Firm 1 Quantity': [],
         'Firm 2 Quantity': [],
@@ -86,25 +97,23 @@ def cournot_model(
     }
 
     for _ in range(num_iterations):
+        new_c2 = np.random.randint(10, c2)
+        new_c1 = np.random.randint(10, c1)
+        a = np.random.normal(demand_curve_coefficient_mu, demand_curve_coefficient_sigma, 1)
+        demand_curve_coefficient = a[0].astype('int')
         if method == 'random':
-            firm1_quantity, firm2_quantity = generate_random_quantity(q1max, q2)
+            firm1_quantity, firm2_quantity = generate_random_quantity(q1, q2)
         elif method == 'optimize':
-            firm1_quantity, firm2_quantity = generate_optimized_quantity(q1max, demand_curve_coefficient, c2)
+            firm1_quantity, firm2_quantity = generate_optimized_quantity(q1, demand_curve_coefficient, c2)
         elif method == 'nash':
-            newc2 = np.random.randint(10, c2)
-            newc1 = np.random.randint(10, c1)
-            firm1_quantity, firm2_quantity = generate_nash_quantity(demand_curve_coefficient, newc1, newc2)
+            firm1_quantity, firm2_quantity = generate_nash_quantity(demand_curve_coefficient, new_c1, new_c2)
         else:
-            firm1_quantity, firm2_quantity = generate_random_quantity(q1max, q2)
+            firm1_quantity, firm2_quantity = generate_random_quantity(q1, q2)
 
         market_demand = demand_curve_coefficient - (firm1_quantity + firm2_quantity)
 
-        if method == 'nash':
-            firm1_profit = (market_demand - firm1_quantity) * firm1_quantity - newc1 * firm1_quantity
-            firm2_profit = (market_demand - firm2_quantity) * firm2_quantity - newc2 * firm2_quantity
-        else:
-            firm1_profit = (market_demand - firm1_quantity) * firm1_quantity - c1 * firm1_quantity
-            firm2_profit = (market_demand - firm2_quantity) * firm2_quantity - c2 * firm2_quantity
+        firm1_profit = (market_demand * firm1_quantity) - (new_c1 * firm1_quantity)
+        firm2_profit = (market_demand * firm2_quantity) - (new_c2 * firm2_quantity)
 
         results['Firm 1 Quantity'].append(firm1_quantity)
         results['Firm 2 Quantity'].append(firm2_quantity)
@@ -185,7 +194,7 @@ def get_statistics(data: pd.DataFrame) -> None:
     print(f"P-value: {p_value}")
 
     # Check if the p-value is less than the significance level (e.g., 0.05)
-    alpha = 0.05
+    alpha = 0.03
     if p_value < alpha:
         print("Reject the null hypothesis: There is a significant difference in the mean profits.")
     else:
