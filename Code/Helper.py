@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.stats import mannwhitneyu
 
+
 # TODO: Unit tests
 
 
@@ -20,20 +21,20 @@ def generate_random_number(n: int, m: int = 0) -> int:
 def generate_random_quantity(q1: int, q2: int) -> tuple[int | bool | Any, int | Any]:
     """
     Function generate random quantity of production for simulation
-    :param q1max: Maximum quantity of production
+    :param q1: Maximum quantity of production
     :param q2: Parameter to tweak quantity of production for Firm 2
     :return: Firm 1 and Firm 2 quantities
     """
-    q1 = np.random.randint(0, q1)  # Randomly initialize quantities
-    q2 = np.random.randint(0, q2)
+    q1 = np.random.randint(10, q1)  # Randomly initialize quantities
+    q2 = np.random.randint(10, q2)
     return q1, q2
 
 
 def generate_optimized_quantity(q1: int, a: int, c: int | float) -> tuple[int | bool | Any, int | Any]:
     """
     Function to return a random quantity of production for Firm 1 and an optimized quantity for Firm 2 which
-    depends on Firm 1 production.
-    :param q1max: Maximum quantity of production
+    depends on Firm 1 production
+    :param q1: Maximum quantity of production
     :param a: The demand curve coefficient
     :param c: Firm 2 cost of production
     :return: Firm 1 and Firm 2 quantities
@@ -46,7 +47,7 @@ def generate_optimized_quantity(q1: int, a: int, c: int | float) -> tuple[int | 
 def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
     """
     Function to return Firm 1 and Firm 2 quantity of Production under the Nash Equilibrium optimization
-    which ensure both the firms profit under any given circumstance.
+    which ensure both the firms profit under any given circumstance
     :param a: The demand curve coefficient
     :param c1: Firm 1 cost of production
     :param c2: Firm 2 cost of production
@@ -57,7 +58,22 @@ def generate_nash_quantity(a, c1, c2) -> tuple[int | bool | Any, int | Any]:
     return q1, q2
 
 
+def generate_elastic_quantity(alpha, beta, q_a, q_b, elasticity, c1, c2):
+    q1 = (alpha - c1 - beta * q_b) / (2 * (1 - elasticity))
+    q2 = (alpha - c2 - beta * q_a) / (2 * (1 - elasticity))
+    return q1, q2
+
+
+def generate_elastic_demand(q1, q2, elasticity, alpha, beta):
+    return (alpha - (beta * (q1 + q2))) + (elasticity * (q1 + q2))
+
+
 def plot_profits(df: pd.DataFrame):
+    """
+
+    :param df:
+    :return:
+    """
     plt.figure(figsize=(20, 15))
     plt.hist([df['Firm 1 Profit'], df['Firm 2 Profit']], stacked=True, color=['orange', 'blue'])
     plt.xlabel('Profit', fontsize=20)
@@ -74,11 +90,17 @@ def cournot_model(
         c1: int | float,
         c2: int | float,
         method: str,
+        alpha: int | float | None = None,
+        beta: int | float | None = None,
         q1: int = 101,
         q2: int = 0,
+        elasticity: int | float | None = None,
 ) -> pd.DataFrame:
     """
 
+    :param beta:
+    :param alpha:
+    :param elasticity:
     :param num_iterations:
     :param demand_curve_coefficient_mu:
     :param demand_curve_coefficient_sigma:
@@ -105,10 +127,18 @@ def cournot_model(
             firm1_quantity, firm2_quantity = generate_random_quantity(q1, q2)
         elif method == 'optimize':
             firm1_quantity, firm2_quantity = generate_optimized_quantity(q1, demand_curve_coefficient, c2)
+        elif method == 'elastic':
+            new_quantity_1, new_quantity_2 = generate_random_quantity(q1, q2)
+            firm1_quantity, firm2_quantity = generate_elastic_quantity(alpha, beta, new_quantity_1, new_quantity_2,
+                                                                       elasticity, c1, c2)
+            firm1_quantity, firm2_quantity = max(0, firm1_quantity), max(0, firm2_quantity)
         elif method == 'nash':
             firm1_quantity, firm2_quantity = generate_nash_quantity(demand_curve_coefficient, new_c1, new_c2)
         else:
             firm1_quantity, firm2_quantity = generate_random_quantity(q1, q2)
+
+        if elasticity and method == 'elastic':
+            demand_curve_coefficient = generate_elastic_demand(firm1_quantity, firm2_quantity, elasticity, alpha, beta)
 
         market_demand = demand_curve_coefficient - (firm1_quantity + firm2_quantity)
 
