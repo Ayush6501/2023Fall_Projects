@@ -287,6 +287,18 @@ def get_profit(data: pd.DataFrame) -> dict:
     Function to extract the net profits from the firms as well as the percentage of total profits.
     :param data: Dataframe consisting of attributes - F1 Quantity, F2 Quantity, F1 Profit & F2 Profit
     :return: Dict containing net profits of both the firm and percentage of total profits
+    >>> sample_data = {'Firm 1 Quantity': [10, 15, 20, 25, 30],
+    ...                'Firm 2 Quantity': [5, 10, 15, 20, 25],
+    ...                'Firm 1 Profit': [100, 150, 200, 250, 300],
+    ...                'Firm 2 Profit': [50, 100, 150, 200, 250]}
+    >>> dt = pd.DataFrame(sample_data)
+    >>> d = get_profit(dt)
+    >>> type(d['firm1ProfitCount'])
+    <class 'int'>
+    >>> d['bothProfitCount'] > 0
+    True
+    >>> d['firm1Profit'].shape == dt[(dt['Firm 1 Profit'] > 0)].shape
+    True
     """
     firm1_net_profit = data[(data['Firm 1 Profit'] > 0)]
     firm2_net_profit = data[(data['Firm 2 Profit'] > 0)]
@@ -307,6 +319,12 @@ def visualizer(df: pd.DataFrame) -> None:
     Function to visualize the dataset generated after Monte Carlo simulation.
     :param df: Dataframe consisting of attributes - F1 Quantity, F2 Quantity, F1 Profit & F2 Profit
     :return: None
+    >>> sample_data = {'Firm 1 Quantity': [10, 15, 20, 25, 30],
+    ...                'Firm 2 Quantity': [5, 10, 15, 20, 25],
+    ...                'Firm 1 Profit': [100, 150, 200, 250, 300],
+    ...                'Firm 2 Profit': [50, 100, 150, 200, 250]}
+    >>> d = pd.DataFrame(sample_data)
+    >>> visualizer(d)  # doctest: +ELLIPSIS
     """
     figure, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(15, 20))
 
@@ -334,6 +352,18 @@ def get_statistics(data: pd.DataFrame) -> None:
     in mean profits.
     :param data: Dataframe consisting of attributes - F1 Quantity, F2 Quantity, F1 Profit & F2 Profit
     :return: None
+    >>> sample_data = {'Firm 1 Profit': [100, 150, 200, 250, 300],
+    ...                'Firm 2 Profit': [50, 100, 150, 200, 250]}
+    >>> df = pd.DataFrame(sample_data)
+    >>> get_statistics(df)
+    Mean Profit for Firm 1: 200.0
+    Mean Profit for Firm 2: 150.0
+    Standard Deviation of Profit for Firm 1: 79.05694150420949
+    Standard Deviation of Profit for Firm 2: 79.05694150420949
+    ***** MANN-WHITNEY U TEST *****
+    Mann-Whitney U statistic: 17.0
+    P-value: 0.39761475195653073
+    Fail to reject the null hypothesis: There is no significant difference in the mean profits.
     """
     firm1p_mean = data['Firm 1 Profit'].mean()
     firm2p_mean = data['Firm 2 Profit'].mean()
