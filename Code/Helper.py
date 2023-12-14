@@ -385,7 +385,7 @@ def get_statistics(data: pd.DataFrame) -> None:
     print(f"P-value: {p_value}")
 
     # Check if the p-value is less than the significance level (e.g., 0.05)
-    alpha = 0.03
+    alpha = 0.05
     if p_value < alpha:
         print("Reject the null hypothesis: There is a significant difference in the mean profits.")
     else:
