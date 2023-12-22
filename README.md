@@ -1,13 +1,14 @@
-# 2023Fall_Projects
+## 2023Fall_Projects
 
-Analyzing Oligopoly Competition in Game Theory using Monte Carlo
-Simulation
+# Analyzing Oligopoly Competition in Game Theory using Monte Carlo Simulation
+## The Cournot Model
 
-The Cournot Model
+### IS - 597 Final Project By: 
+Ayush Majumdar 
+ayush10@illinois.edu
 
-IS - 597 Final Project By: Ayush Majumdar ayush10@illinois.edu
-
-Abstract This project presents a comprehensive analysis of the Cournot
+## Abstract 
+This project presents a comprehensive analysis of the Cournot
 model, integrating concepts from statistics and micro-economics through
 Monte Carlo simulation. The study employs a rigorous approach,
 randomizing all variables involved and conducting simulations over
@@ -21,7 +22,8 @@ real-world scenarios, offering a robust foundation for decision-making
 and policy formulation in the realm of industrial organization and
 competition.
 
-Introduction The Cournot model\[1\], a cornerstone in industrial
+## Introduction 
+The Cournot model\[1\], a cornerstone in industrial
 organization and game theory, offers a fundamental framework for
 analyzing strategic interactions among firms in oligopolistic markets.
 Traditionally rooted in economic theory, this project expands the
@@ -54,36 +56,38 @@ methodologies, we contribute to a richer understanding of strategic
 interactions in oligopolistic markets, paving the way for more informed
 policy decisions and strategic business planning.
 
-Null Hypothesis 1. There is no significant difference in the average
-profits of Firm 1 and Firm 2 under Cournot competition. In other words,
-the profits of both firms are equal in the equilibrium. 2. There are no
-significant differences in the working of the Cournot model under
-elastics as well as inelastic demands. 3. Under real world scenarios
-which include random real world factors such as demand and supply shock
-the profits gained by the firms will follow a normal distribution
-adhering to the Central Limit Theorem.
+## Null Hypothesis 
+1. There is no significant difference in the average profits of Firm 1 and Firm 2 under Cournot competition. In other words, the profits of both firms are equal in the equilibrium.
+2. There are no significant differences in the working of the Cournot model under elastics as well as inelastic demands.
+3. Under real world scenarios which include random real world factors such as demand and supply shock the profits gained by the firms will follow a normal distribution adhering to the Central Limit Theorem.
 
-Methodology The methodology for this project involves employing Monte
+## Methodology 
+The methodology for this project involves employing Monte
 Carlo simulation to analyze the Cournot model, incorporating concepts
 from statistics, economics, and game theory. The simulations aim to
 investigate the strategic interactions among firms in oligopolistic
 markets by randomizing key variables. The following template outlines
-the essential components of each simulation. \* Variables: 1. Number of
-iterations 2. Demand curve coefficient 3. Cost of production (Ci) 4.
-Quantity of Production 5. Market Demand Novelty 1. Studying the Cournot
-Model in an Oligopolic Duopoly from an analytical point of view instead
-of a mathematical point of view. 2. Use of Monte Carlo Simulation to
-simulate the Oligopoly Market for a large duration. 3. Simplify the
-Cournot model profit maximization using simple economic demand and
-supply equations. 4. Modeling the Nash Equilibrium\[2\]\[3\] into a
-Monte Carlo Simulation to ensure both the firms profit under all 10000
-iterations of the simulation. 5. The Cournot Model has previously been
-studied under isoelastic conditions\[6\]. However, this study examines
-its effects under both elastic and inelastic demands. 6. Modeling the
-Cournot Model under 6 different real world scenarios: \* Demand Shock \*
-Supply Shock \* Inventory \* Disease Outbreak (p=0.1) \* Inflation
-(p=0.7) ChatGPT Queries Q: explain elastic demand briefly A: Elastic
-demand refers to a situation in which the quantity demanded of a good or
+the essential components of each simulation. 
+\* Variables: 
+1. Number of iterations
+2. Demand curve coefficient
+3. Cost of production (Ci)
+4. Quantity of Production
+5. Market Demand
+
+## Novelty 
+1. Studying the Cournot Model in an Oligopolic Duopoly from an analytical point of view instead
+of a mathematical point of view.
+2. Use of Monte Carlo Simulation to simulate the Oligopoly Market for a large duration.
+3. Simplify the Cournot model profit maximization using simple economic demand and supply equations.
+4. Modeling the Nash Equilibrium\[2\]\[3\] into a Monte Carlo Simulation to ensure both the firms profit under all 10000 iterations of the simulation.
+5. The Cournot Model has previously been studied under isoelastic conditions\[6\]. However, this study examines its effects under both elastic and inelastic demands.
+6. Modeling the Cournot Model under 6 different real world scenarios:
+      \* Demand Shock \*Supply Shock \* Inventory \* Disease Outbreak (p=0.1) \* Inflation(p=0.7)
+
+## ChatGPT Queries 
+### Q: explain elastic demand briefly 
+A: Elastic demand refers to a situation in which the quantity demanded of a good or
 service is highly responsive to changes in price. In other words, when
 the price of a product changes, the percentage change in the quantity
 demanded is relatively larger. Elasticity of demand is a measure of how
@@ -128,7 +132,7 @@ significant decrease in total revenue, while a price decrease may result
 in a substantial increase in total revenue. Explanation: Query to
 understand elastic demand
 
-Q: How would the cournot model change with elastic and inelastic demand?
+### Q: How would the cournot model change with elastic and inelastic demand?
 A: The Cournot model is a simple economic model used to analyze
 competition between firms in an oligopoly market. In the Cournot model,
 firms simultaneously choose the quantity of output they will produce,
@@ -171,8 +175,8 @@ market. Explanation: This query helped me validate the simulation
 results and also helped me select values for the demand and supply
 curve\[9\] as well as the elasticity constant.
 
-Q: Is alpha value high for inelastic demand? A: In the context of the
-Cournot model, the parameter α (alpha) represents the intercept of the
+### Q: Is alpha value high for inelastic demand? 
+A: In the context of the Cournot model, the parameter α (alpha) represents the intercept of the
 demand curve. A higher value of α implies a higher level of demand when
 the quantity supplied is zero. The specific value of α alone doesn\'t
 inherently indicate whether the demand is elastic or inelastic; it is
@@ -194,7 +198,7 @@ interpretation may depend on the units used for quantity and price.
 Explanation: This query helped me understand how the alpha and beta
 values worked with each other.
 
-Citations 
+## Citations 
 1. G. Romeo, 'Chapter 6 - Microeconomic theory in a static
 environment', in Elements of Numerical Mathematical Economics with
 Excel, G. Romeo, Ed. Academic Press, 2020, pp. 295--382.
